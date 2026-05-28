@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "PanCan-RE",
+  "description": "Annotation output format specification. Each annotated record represents one abstract with all entity mentions and relations.",
+
+  "record_schema": {
+    "record_id": "string — Corpus record ID (e.g., PANCAN-00001)",
+    "pmid": "string — PubMed ID if available",
+    "doi": "string — DOI if available",
+    "title": "string — Original article title",
+    "abstract": "string — Original abstract text (unmodified)",
+    "sentences": "list[string] — Sentence-split abstract",
+
+    "entities": [
+      {
+        "entity_id": "string — Unique ID within this record (e.g., T1, T2, ...)",
+        "type": "string — Entity type: GeneOrProtein | Chemical | Disease | SequenceVariant | Pathway | CellLine",
+        "text": "string — Exact text span as it appears in the abstract",
+        "start": "int — Character offset start (0-indexed, relative to abstract field)",
+        "end": "int — Character offset end (exclusive)",
+        "normalized_id": "string — Database identifier if available (e.g., NCBI:3845 for KRAS, MESH:D000077192 for gemcitabine). Empty string if not normalized."
+      }
+    ],
+
+    "relations": [
+      {
+        "relation_id": "string — Unique ID within this record (e.g., R1, R2, ...)",
+        "type": "string — Relation type: Positive_Correlation | Negative_Correlation | Association | Binding | Drug_Interaction | Cotreatment | Comparison | Conversion",
+        "subject_id": "string — entity_id of the subject entity (for directed relations)",
+        "object_id": "string — entity_id of the object entity (for directed relations)",
+        "directed": "boolean — true if subject→object direction is meaningful",
+        "novelty": "string — Novel | Known",
+        "evidence_sentence": "string — The sentence (or sentences) that most clearly supports this relation"
+      }
+    ],
+
+    "metadata": {
+      "annotator": "string — Annotator ID",
+      "annotation_date": "string — ISO 8601 date",
+      "annotation_time_seconds": "int — Time spent annotating this record",
+      "confidence": "string — high | medium | low — Annotator's confidence in the annotations",
+      "notes": "string — Any annotator notes or flags"
+    }
+  },
+
+  "example_annotated_record": {
+    "record_id": "PANCAN-00849",
+    "pmid": "example",
+    "title": "Saikosaponin D overcomes gemcitabine resistance in pancreatic cancer via AKT/mTOR pathway inhibition and synergistic induction of apoptosis and autophagy.",
+    "abstract": "Gemcitabine (GEM) is the first-line chemotherapy drug for pancreatic cancer, but its efficacy is often limited by inherent drug resistance. Saikosaponin D (SSD), a bioactive triterpenoid saponin, exhibits antitumor properties. The present study investigated the effects of SSD on pancreatic cancer cells, and evaluated whether SSD can overcome GEM resistance.",
+
+    "entities": [
+      {"entity_id": "T1", "type": "Chemical", "text": "Gemcitabine", "start": 0, "end": 11, "normalized_id": "MESH:D000077192"},
+      {"entity_id": "T2", "type": "Chemical", "text": "GEM", "start": 13, "end": 16, "normalized_id": "MESH:D000077192"},
+      {"entity_id": "T3", "type": "Disease", "text": "pancreatic cancer", "start": 52, "end": 69, "normalized_id": "MESH:D010190"},
+      {"entity_id": "T4", "type": "Disease", "text": "drug resistance", "start": 112, "end": 127, "normalized_id": ""},
+      {"entity_id": "T5", "type": "Chemical", "text": "Saikosaponin D", "start": 129, "end": 143, "normalized_id": ""},
+      {"entity_id": "T6", "type": "Chemical", "text": "SSD", "start": 145, "end": 148, "normalized_id": ""},
+      {"entity_id": "T7", "type": "Disease", "text": "pancreatic cancer", "start": 240, "end": 257, "normalized_id": "MESH:D010190"},
+      {"entity_id": "T8", "type": "Disease", "text": "GEM resistance", "start": 316, "end": 330, "normalized_id": ""}
+    ],
+
+    "relations": [
+      {
+        "relation_id": "R1",
+        "type": "Negative_Correlation",
+        "subject_id": "T1",
+        "object_id": "T3",
+        "directed": true,
+        "novelty": "Known",
+        "evidence_sentence": "Gemcitabine (GEM) is the first-line chemotherapy drug for pancreatic cancer"
+      },
+      {
+        "relation_id": "R2",
+        "type": "Negative_Correlation",
+        "subject_id": "T5",
+        "object_id": "T8",
+        "directed": true,
+        "novelty": "Novel",
+        "evidence_sentence": "evaluated whether SSD can overcome GEM resistance"
+      },
+      {
+        "relation_id": "R3",
+        "type": "Drug_Interaction",
+        "subject_id": "T5",
+        "object_id": "T1",
+        "directed": false,
+        "novelty": "Novel",
+        "evidence_sentence": "SSD can overcome GEM resistance to enhance its antitumor effects"
+      }
+    ],
+
+    "metadata": {
+      "annotator": "annotator_01",
+      "annotation_date": "2026-05-28",
+      "annotation_time_seconds": 180,
+      "confidence": "high",
+      "notes": ""
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "exact_duplicates_removed": 293,
+  "near_duplicates_removed": 4842,
+  "total_duplicates_removed": 5135,
+  "excluded_language": 65,
+  "excluded_pub_type": 1753,
+  "excluded_no_abstract": 1,
+  "excluded_abstract_too_short": 23,
+  "excluded_abstract_too_long": 0,
+  "after_deduplication": 9860,
+  "after_screening": 8018
+}

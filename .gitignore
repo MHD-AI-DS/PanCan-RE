@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# API keys and secrets — NEVER commit these
+.env
+*.env
+secrets.yaml
+
+# Large data files (tracked separately or via Git LFS)
+data/raw/*.jsonl
+data/raw/*.json
+data/screened/*.jsonl
+data/deduplicated/*.jsonl
+data/processed/*.jsonl
+# Keep final corpus and PRISMA artifacts
+# data/final/corpus.jsonl  — include for reproducibility
+# data/prisma/  — include for reproducibility
+
+# Annotation data (may be large)
+annotation/data/*.jsonl
+annotation/data/*.xlsx
+
+# Zip archives
+*.zip
+
+# Internal/thesis documents (not for public)
+docs/*.docx
+docs/*.pdf
+docs/LRE_Paper_Skeleton.md
+
+# Claude config
+.claude/

@@ -1,0 +1,13 @@
+# PanCan-RE Annotation Tools — Dependencies
+# Install: pip install -r requirements.txt
+
+# Pre-annotation (Groq API)
+requests>=2.31.0
+
+# Annotation GUI
+streamlit>=1.30.0
+
+# Expert review export
+openpyxl>=3.1.0
+
+# IAA computation (no extra deps — pure Python)

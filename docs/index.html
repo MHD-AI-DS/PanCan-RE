@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PanCan-RE — Expert Validation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{--s50:#f8fafc;--s100:#f1f5f9;--s200:#e2e8f0;--s300:#cbd5e1;--s400:#94a3b8;--s500:#64748b;--s600:#475569;--s700:#334155;--s800:#1e293b;--s900:#0f172a;--b5:#3b82f6;--b6:#2563eb;--b7:#1d4ed8;--g50:#f0fdf4;--g1:#dcfce7;--g5:#22c55e;--g6:#16a34a;--g7:#15803d;--r50:#fef2f2;--r1:#fee2e2;--r5:#ef4444;--r6:#dc2626;--a50:#fffbeb;--a1:#fef3c7;--a5:#f59e0b;--a6:#d97706;--p5:#a855f7;--o5:#f97316;--t5:#14b8a6;--rad:12px}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:var(--s50);color:var(--s800);line-height:1.6}
+        .topbar{background:linear-gradient(135deg,var(--s900),var(--s800));color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+        .topbar-inner{max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+        .topbar h1{font-size:1.15rem;font-weight:600;letter-spacing:-.02em}
+        .topbar h1 span{color:var(--b5)}
+        .badge{background:rgba(255,255,255,.1);padding:4px 14px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid rgba(255,255,255,.08)}
+        .pbar{background:var(--s900);padding:0 24px 16px}
+        .pbar-in{max-width:1100px;margin:0 auto}
+        .ptrack{background:rgba(255,255,255,.08);border-radius:100px;height:6px;overflow:hidden}
+        .pfill{background:linear-gradient(90deg,var(--g5),var(--t5));height:100%;border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+        .plabel{color:var(--s400);font-size:.72rem;margin-top:6px;text-align:right;font-weight:500;letter-spacing:.03em}
+        .ctn{max-width:1100px;margin:0 auto;padding:24px}
+        .card{background:#fff;border-radius:var(--rad);box-shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);border:1px solid var(--s200);margin-bottom:20px;overflow:hidden;transition:box-shadow .2s}
+        .card:hover{box-shadow:0 10px 25px -3px rgba(0,0,0,.08)}
+        .card-h{padding:16px 24px;border-bottom:1px solid var(--s100);display:flex;justify-content:space-between;align-items:center}
+        .card-h h2{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--s400);font-weight:600}
+        .card-b{padding:24px}
+        .rtitle{font-size:1.05rem;font-weight:600;color:var(--s900);line-height:1.4;margin-bottom:4px}
+        .rmeta{font-size:.78rem;color:var(--s400)}
+        .atext{font-size:.92rem;line-height:2;color:var(--s700)}
+        .ent{border-radius:4px;padding:2px 5px;font-weight:500;cursor:default;transition:all .15s}
+        .ent:hover{filter:brightness(.92)}
+        .etag{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;vertical-align:super;margin-left:2px;opacity:.8}
+        .eG{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+        .eC{background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe}
+        .eD{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+        .eV{background:#f3e8ff;color:#7c3aed;border:1px solid #e9d5ff}
+        .eP{background:#ffedd5;color:#c2410c;border:1px solid #fed7aa}
+        .eL{background:#e2e8f0;color:#475569;border:1px solid #cbd5e1}
+        .legend{display:flex;gap:8px;flex-wrap:wrap}
+        .lchip{font-size:.7rem;padding:3px 10px;border-radius:6px;font-weight:600}
+        .rel{border:1px solid var(--s200);border-radius:10px;padding:18px 20px;margin-bottom:12px;transition:all .25s cubic-bezier(.4,0,.2,1);background:#fff}
+        .rel.vC{border-color:var(--g5);background:var(--g50)} .rel.vI{border-color:var(--r5);background:var(--r50)} .rel.vU{border-color:var(--a5);background:var(--a50)}
+        .rflow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+        .rent{font-weight:600;font-size:.92rem}
+        .rtl{font-size:.72rem;color:#fff;padding:3px 10px;border-radius:6px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+        .rtl-PC{background:var(--r6)} .rtl-NC{background:var(--b6)} .rtl-AS{background:var(--a6)} .rtl-BI{background:var(--p5)} .rtl-DI{background:var(--o5)} .rtl-CT{background:var(--t5)} .rtl-CM{background:var(--s500)} .rtl-CV{background:#78350f}
+        .rarr{color:var(--s300);font-size:1.2rem}
+        .rmean{font-size:.78rem;color:var(--s500);font-style:italic}
+        .nov{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:.03em}
+        .nov-N{background:#dbeafe;color:var(--b7)} .nov-K{background:#f3e8ff;color:#7c3aed}
+        .evid{font-size:.8rem;color:var(--s500);padding:8px 14px;background:var(--s50);border-radius:8px;border-left:3px solid var(--s200);margin:8px 0;font-style:italic}
+        .vrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+        .vb{padding:7px 18px;border:2px solid var(--s200);border-radius:8px;background:#fff;cursor:pointer;font-size:.82rem;font-weight:600;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+        .vb:hover{transform:translateY(-1px);box-shadow:0 4px 6px -1px rgba(0,0,0,.07)}
+        .vb:active{transform:translateY(0)}
+        .vb.sC{border-color:var(--g5);background:var(--g1);color:var(--g7)}
+        .vb.sI{border-color:var(--r5);background:var(--r1);color:var(--r6)}
+        .vb.sU{border-color:var(--a5);background:var(--a1);color:var(--a6)}
+        .cbox{width:100%;padding:8px 14px;border:1px solid var(--s200);border-radius:8px;font-size:.82rem;font-family:inherit;resize:vertical;min-height:36px;margin-top:8px;background:var(--s50);transition:border-color .2s}
+        .cbox:focus{outline:none;border-color:var(--b5);background:#fff}
+        .vb:focus-visible{outline:3px solid var(--b5);outline-offset:2px}
+        .nb:focus-visible{outline:3px solid var(--b5);outline-offset:2px}
+        .evid-expand{color:var(--b6);cursor:pointer;font-size:.75rem;font-weight:600;border:none;background:none;padding:0;margin-left:4px}
+        .evid-expand:hover{text-decoration:underline}
+        .kbd-hint{position:fixed;bottom:24px;left:24px;background:var(--s800);color:var(--s400);padding:8px 14px;border-radius:8px;font-size:.72rem;display:flex;gap:12px;z-index:100;opacity:.7}
+        .kbd-hint kbd{background:var(--s700);padding:2px 6px;border-radius:4px;color:var(--s200);font-family:'JetBrains Mono',monospace;font-size:.68rem}
+        .navbar{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding:16px 0}
+        .nb{padding:10px 28px;border:none;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+        .nb:hover{transform:translateY(-2px);box-shadow:0 10px 25px -3px rgba(0,0,0,.08)}
+        .nb:active{transform:translateY(0)} .nb:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+        .nb.pr{background:linear-gradient(135deg,var(--b6),var(--b7));color:#fff}
+        .nb.sc{background:#fff;color:var(--s700);border:1px solid var(--s200)}
+        .nb.su{background:linear-gradient(135deg,var(--g5),var(--g6));color:#fff}
+        .pi{font-size:.85rem;color:var(--s400);font-weight:500;font-variant-numeric:tabular-nums}
+        .ob{min-height:80vh;display:flex;align-items:center;justify-content:center}
+        .obc{text-align:center;max-width:520px}
+        .obc h2{font-size:1.6rem;font-weight:700;color:var(--s900);margin-bottom:8px;letter-spacing:-.03em}
+        .obc p{color:var(--s500);margin-bottom:24px;font-size:.95rem}
+        .sts{display:flex;gap:24px;justify-content:center;margin:20px 0 28px}
+        .stb{text-align:center} .stn{font-size:1.8rem;font-weight:700;color:var(--b6);font-variant-numeric:tabular-nums}
+        .stl{font-size:.72rem;color:var(--s400);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+        .inf{padding:12px 18px;border:2px solid var(--s200);border-radius:10px;font-size:1rem;font-family:inherit;width:320px;text-align:center;transition:border-color .2s}
+        .inf:focus{outline:none;border-color:var(--b5)}
+        .dlbar{text-align:center;padding:12px 0 40px}
+        .resume-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--s200)}
+        .resume-section h3{font-size:.82rem;color:var(--s500);font-weight:600;margin-bottom:8px}
+        .resume-section p{font-size:.82rem;color:var(--s400);margin-bottom:12px}
+        .file-label{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:2px dashed var(--s300);border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:500;color:var(--s600);transition:all .2s}
+        .file-label:hover{border-color:var(--b5);color:var(--b6);background:var(--s50)}
+        .file-label input{display:none}
+        .save-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+        .save-banner{background:var(--s800);color:var(--s300);text-align:center;padding:10px 24px;font-size:.78rem;font-weight:500;display:flex;justify-content:center;align-items:center;gap:8px}
+        .save-banner .dot{width:8px;height:8px;border-radius:50%;background:var(--g5);display:inline-block;animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .toast{position:fixed;bottom:24px;right:24px;background:var(--s800);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:500;box-shadow:0 10px 25px rgba(0,0,0,.2);transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:200;display:flex;align-items:center;gap:8px}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast .ticon{font-size:1.1rem}
+        @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .ai{animation:fi .35s cubic-bezier(.4,0,.2,1) both}
+        @media(max-width:768px){.ctn{padding:12px}.card-b{padding:16px}.topbar-inner{padding:12px 16px}.sts{flex-direction:column;gap:12px}.inf{width:100%}}
+    </style>
+</head>
+<body>
+<div class="topbar">
+    <div class="topbar-inner">
+        <h1><span>PanCan-RE</span> &nbsp;Expert Validation Portal</h1>
+        <div style="display:flex;align-items:center;gap:16px">
+            <span class="badge" id="rb">Reviewer: —</span>
+        </div>
+    </div>
+    <div class="pbar"><div class="pbar-in">
+        <div class="ptrack"><div class="pfill" id="pf" style="width:0%"></div></div>
+        <div class="plabel" id="pl">0 / 0 relations reviewed</div>
+    </div></div>
+</div>
+
+<div id="ob" class="ctn ob">
+    <div class="card obc" style="padding:48px 40px">
+        <h2>Welcome, Expert Reviewer</h2>
+        <p>Your clinical expertise is essential for validating biomedical relation annotations extracted from pancreatic cancer literature.</p>
+        <div class="sts">
+            <div class="stb"><div class="stn" id="sa">—</div><div class="stl">Abstracts</div></div>
+            <div class="stb"><div class="stn" id="sr">—</div><div class="stl">Relations</div></div>
+            <div class="stb"><div class="stn" id="se">—</div><div class="stl">Entities</div></div>
+        </div>
+        <input class="inf" id="rn" type="text" placeholder="Enter your name (e.g., Dr. Smith)"><br>
+        <button class="nb pr" style="margin-top:16px;padding:14px 48px;font-size:1rem" onclick="start()">Start New Review →</button>
+        <div class="resume-section">
+            <h3>Returning reviewer?</h3>
+            <p>Upload your previous review file to continue where you left off — works on any device.</p>
+            <label class="file-label">
+                <span>Upload Previous Review (.json)</span>
+                <input type="file" accept=".json" onchange="resumeFromFile(this)">
+            </label>
+        </div>
+    </div>
+</div>
+
+<div id="ra" class="ctn" style="display:none">
+    <details class="card" style="margin-bottom:20px">
+        <summary style="padding:14px 24px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--s500);letter-spacing:.03em">HOW TO REVIEW</summary>
+        <div class="card-b" style="padding-top:0;font-size:.85rem;color:var(--s600);line-height:1.8">
+            For each proposed relation, click <strong style="color:var(--g6)">Correct</strong>, <strong style="color:var(--r5)">Incorrect</strong>, or <strong style="color:var(--a6)">Unsure</strong>.<br>
+            Optionally add a brief comment explaining your reasoning. Click <strong>Next →</strong> when done.
+        </div>
+    </details>
+    <div class="card ai">
+        <div class="card-h"><h2>Abstract</h2><span style="font-size:.78rem;color:var(--s400);font-weight:500;font-family:'JetBrains Mono',monospace" id="ri"></span></div>
+        <div class="card-b">
+            <div class="rtitle" id="rt"></div>
+            <div class="rmeta" id="rm"></div>
+            <div style="margin:16px 0 12px"><div class="legend">
+                <span class="lchip eG">Gene/Protein</span><span class="lchip eC">Drug/Chemical</span><span class="lchip eD">Disease</span>
+                <span class="lchip eV">Variant</span><span class="lchip eP">Pathway</span><span class="lchip eL">Cell Line</span>
+            </div></div>
+            <div class="atext" id="ah"></div>
+        </div>
+    </div>
+    <div class="card ai">
+        <div class="card-h"><h2>Proposed Relations</h2><span style="font-size:.78rem;color:var(--s400)" id="rc"></span></div>
+        <div class="card-b" id="rl"></div>
+    </div>
+    <div class="navbar">
+        <button class="nb sc" id="pb" onclick="go(-1)">← Previous</button>
+        <span class="pi" id="pg"></span>
+        <button class="nb pr" id="nb" onclick="go(1)">Next →</button>
+    </div>
+    <div class="save-banner"><span class="dot"></span> Your progress is auto-saved in this browser. You can close and return anytime on this device.</div>
+    <div class="dlbar">
+        <div class="save-actions">
+            <button class="nb su" onclick="dl()">Download Review File</button>
+            <button class="nb sc" onclick="dlAndToast()">Save Progress for Later</button>
+        </div>
+        <p style="font-size:.78rem;color:var(--s400);margin-top:10px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6">
+            <strong>Same device?</strong> Just close and come back — progress auto-saves.<br>
+            <strong>Different device?</strong> Click "Save Progress for Later" and upload the file when you return.<br>
+            <strong>Finished?</strong> Click "Download Review File" and send it to the research team.
+        </p>
+    </div>
+</div>
+<div class="toast" id="toast"><span class="ticon"></span><span id="toast-msg"></span></div>
+<div class="kbd-hint" id="kbd-hint" style="display:none"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp; <kbd>1</kbd> correct &nbsp; <kbd>2</kbd> incorrect &nbsp; <kbd>3</kbd> unsure</div>
+
+<script>
+let D=[],ci=0,rv="",V={};
+const SH={GeneOrProtein:"GENE",Chemical:"CHEM",Disease:"DIS",SequenceVariant:"VAR",Pathway:"PATH",CellLine:"CELL"};
+const EC={GeneOrProtein:"eG",Chemical:"eC",Disease:"eD",SequenceVariant:"eV",Pathway:"eP",CellLine:"eL"};
+const RTC={Positive_Correlation:"PC",Negative_Correlation:"NC",Association:"AS",Binding:"BI",Drug_Interaction:"DI",Cotreatment:"CT",Comparison:"CM",Conversion:"CV"};
+const MN={Positive_Correlation:"increases / activates / causes",Negative_Correlation:"decreases / inhibits / treats",Association:"is associated with",Binding:"physically binds to",Drug_Interaction:"interacts pharmacologically with",Cotreatment:"is co-administered with",Comparison:"is compared with",Conversion:"is converted to"};
+
+async function init(){try{const r=await fetch("review_data.json");D=await r.json()}catch(e){}
+const sv=localStorage.getItem("pcr_v");if(sv)try{V=JSON.parse(sv)}catch(e){}
+document.getElementById("sa").textContent=D.length;
+document.getElementById("sr").textContent=D.reduce((s,r)=>s+(r.relations||[]).length,0);
+document.getElementById("se").textContent=D.reduce((s,r)=>s+(r.entities||[]).length,0)}
+
+function start(){rv=document.getElementById("rn").value.trim()||"Anonymous";
+document.getElementById("rb").textContent="Reviewer: "+rv;
+document.getElementById("ob").style.display="none";
+document.getElementById("ra").style.display="block";
+document.getElementById("kbd-hint").style.display="flex";
+render()}
+
+function render(){if(!D.length)return;const r=D[ci];
+document.getElementById("ri").textContent=r.record_id;
+document.getElementById("rt").textContent=r.title;
+document.getElementById("rm").textContent=(r.journal||"")+(r.year?" ("+r.year+")":"");
+document.getElementById("ah").innerHTML=hl(r.abstract,r.entities);
+document.getElementById("rc").textContent=(r.relations||[]).length+" relations";
+document.getElementById("pg").textContent=(ci+1)+" / "+D.length;
+document.getElementById("pb").disabled=ci===0;document.getElementById("nb").disabled=ci===D.length-1;
+const c=document.getElementById("rl");c.innerHTML="";
+const el={};(r.entities||[]).forEach(e=>el[e.entity_id]=e);
+(r.relations||[]).forEach((rel,i)=>{const s=el[rel.subject_id]||{},o=el[rel.object_id]||{};
+const k=r.record_id+"_"+rel.relation_id,sv=V[k]||{};
+const d=document.createElement("div");
+d.className="rel ai"+(sv.verdict?" v"+sv.verdict[0]:"");d.id="r"+i;
+const st=SH[s.type]||"?",ot=SH[o.type]||"?",tc=RTC[rel.type]||"AS";
+d.innerHTML=`<div class="rflow">
+<span class="rent">${esc(s.text||"?")}</span><span style="font-size:.72rem;color:var(--s400)">[${st}]</span>
+<span class="rarr">→</span><span class="rtl rtl-${tc}">${rel.type.replace(/_/g," ")}</span><span class="rarr">→</span>
+<span class="rent">${esc(o.text||"?")}</span><span style="font-size:.72rem;color:var(--s400)">[${ot}]</span>
+<span class="nov nov-${rel.novelty?rel.novelty[0]:""}">${rel.novelty||""}</span></div>
+<div class="rmean">${MN[rel.type]||rel.type}</div>
+${rel.evidence?`<div class="evid" id="ev-${i}">"${esc(trn(rel.evidence,150))}"${rel.evidence.length>150?` <button class="evid-expand" onclick="expandEv(${i},'${esc(rel.evidence.replace(/'/g,"\\'"))}')">show more</button>`:""}</div>`:""}
+<div class="vrow">
+<button class="vb ${sv.verdict==="Correct"?"sC":""}" onclick="vt('${k}','Correct',${i})" aria-label="Mark as correct">&#10003; Correct</button>
+<button class="vb ${sv.verdict==="Incorrect"?"sI":""}" onclick="vt('${k}','Incorrect',${i})" aria-label="Mark as incorrect">&#10007; Incorrect</button>
+<button class="vb ${sv.verdict==="Unsure"?"sU":""}" onclick="vt('${k}','Unsure',${i})" aria-label="Mark as unsure">? Unsure</button></div>
+<textarea class="cbox" rows="1" placeholder="Optional comment…" onchange="cm('${k}',this.value)">${sv.comment||""}</textarea>`;
+c.appendChild(d)});prog()}
+
+function hl(t,es){if(!es||!es.length)return esc(t);
+const s=es.filter(e=>e.start>=0&&e.end>0).sort((a,b)=>a.start-b.start);
+let h="",le=0;for(const e of s){if(e.start<le)continue;
+const cl=EC[e.type]||"",tg=SH[e.type]||"?";
+h+=esc(t.slice(le,e.start));h+=`<span class="ent ${cl}">${esc(t.slice(e.start,e.end))}<span class="etag">${tg}</span></span>`;le=e.end}
+h+=esc(t.slice(le));return h}
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function trn(s,n){return s.length>n?s.slice(0,n)+"…":s}
+
+function vt(k,v,i){if(!V[k])V[k]={};V[k].verdict=v;V[k].reviewer=rv;V[k].ts=new Date().toISOString();
+localStorage.setItem("pcr_v",JSON.stringify(V));
+const el=document.getElementById("r"+i);el.className="rel ai v"+v[0];
+el.querySelectorAll(".vb").forEach(b=>b.className="vb");
+el.querySelector(`.vb:nth-child(${v==="Correct"?1:v==="Incorrect"?2:3})`).classList.add("s"+v[0]);prog();
+showToast(v==="Correct"?"✓":"✗","Marked as "+v+" — saved automatically")}
+
+function showToast(icon,msg){const t=document.getElementById("toast");
+document.getElementById("toast-msg").textContent=msg;
+t.querySelector(".ticon").textContent=icon;
+t.classList.add("show");clearTimeout(t._tid);
+t._tid=setTimeout(()=>t.classList.remove("show"),2000)}
+
+function cm(k,c){if(!V[k])V[k]={};V[k].comment=c;localStorage.setItem("pcr_v",JSON.stringify(V))}
+
+function prog(){const tot=D.reduce((s,r)=>s+(r.relations||[]).length,0);
+const dn=Object.keys(V).filter(k=>V[k].verdict).length;const p=tot?dn/tot*100:0;
+document.getElementById("pf").style.width=p+"%";
+document.getElementById("pl").textContent=dn+" / "+tot+" relations reviewed ("+Math.round(p)+"%)"}
+
+function go(d){ci=Math.max(0,Math.min(D.length-1,ci+d));render();window.scrollTo({top:0,behavior:"smooth"})}
+
+function dl(){const res={reviewer:rv,date:new Date().toISOString(),records:D.length,
+relations_reviewed:Object.keys(V).filter(k=>V[k].verdict).length,verdicts:V,
+current_page:ci,version:"1.0"};
+const b=new Blob([JSON.stringify(res,null,2)],{type:"application/json"});
+const a=document.createElement("a");a.href=URL.createObjectURL(b);
+a.download=`pancan_review_${rv.replace(/\s/g,"_")}_${new Date().toISOString().slice(0,10)}.json`;
+a.click();URL.revokeObjectURL(a.href)}
+
+function dlAndToast(){dl();showToast("💾","Progress saved! Upload this file to resume on any device.")}
+
+function resumeFromFile(input){const file=input.files[0];if(!file)return;
+const reader=new FileReader();
+reader.onload=function(e){try{
+const data=JSON.parse(e.target.result);
+if(data.verdicts){V=data.verdicts;localStorage.setItem("pcr_v",JSON.stringify(V))}
+if(data.reviewer){document.getElementById("rn").value=data.reviewer}
+if(typeof data.current_page==="number"){ci=data.current_page}
+const cnt=Object.keys(V).filter(k=>V[k].verdict).length;
+showToast("✓","Restored "+cnt+" verdicts from "+data.reviewer+"'s review");
+setTimeout(()=>{
+if(data.reviewer){document.getElementById("rn").value=data.reviewer;start()}
+},500);
+}catch(err){showToast("✗","Invalid file format")}};
+reader.readAsText(file)}
+
+function expandEv(i,full){const el=document.getElementById("ev-"+i);if(el)el.innerHTML='"'+esc(full)+'"'}
+
+// Keyboard shortcuts
+document.addEventListener("keydown",function(e){
+if(document.getElementById("ra").style.display==="none")return;
+if(e.target.tagName==="TEXTAREA"||e.target.tagName==="INPUT")return;
+if(e.key==="ArrowLeft"){go(-1);e.preventDefault()}
+if(e.key==="ArrowRight"){go(1);e.preventDefault()}
+});
+
+window.addEventListener("load",init);
+</script>
+</body>
+</html>

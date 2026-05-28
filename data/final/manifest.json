@@ -1,0 +1,141 @@
+{
+  "project": "PanCan-RE Corpus",
+  "version": "1.0.0",
+  "generated_at": "2026-04-20T00:11:27.829438",
+  "corpus_size": 7749,
+  "prisma_counts": {
+    "pubmed_identified": 9999,
+    "pmc_identified": 9999,
+    "scopus_identified": 5000,
+    "total_identified": 24998,
+    "exact_duplicates_removed": 293,
+    "near_duplicates_removed": 4842,
+    "total_duplicates_removed": 5135,
+    "after_deduplication": 9860,
+    "excluded_language": 65,
+    "excluded_pub_type": 1753,
+    "excluded_no_abstract": 1,
+    "excluded_abstract_too_short": 23,
+    "excluded_abstract_too_long": 0,
+    "total_screening_excluded": 1842,
+    "after_screening": 8018,
+    "assessed_eligibility": 8018,
+    "excluded_no_entity_pairs": 269,
+    "after_eligibility": 7749,
+    "final_included": 7749
+  },
+  "config_snapshot": {
+    "search": {
+      "pubmed_query": "(\"pancreatic neoplasms\"[MeSH Terms] OR \"pancreatic cancer\"[Title/Abstract] OR \"pancreatic ductal adenocarcinoma\"[Title/Abstract] OR \"PDAC\"[Title/Abstract] OR \"pancreatic tumor\"[Title/Abstract] OR \"pancreatic carcinoma\"[Title/Abstract]) AND (\"drug interactions\"[MeSH Terms] OR \"drug-drug interaction\"[Title/Abstract] OR \"gene expression\"[MeSH Terms] OR \"gene-disease\"[Title/Abstract] OR \"protein interaction\"[Title/Abstract] OR \"protein-protein interaction\"[Title/Abstract] OR \"signal transduction\"[MeSH Terms] OR \"drug response\"[Title/Abstract] OR \"biomarker\"[Title/Abstract] OR \"therapeutic target\"[Title/Abstract] OR \"mutation\"[Title/Abstract] OR \"polymorphism\"[Title/Abstract] OR \"adverse effect\"[Title/Abstract] OR \"side effect\"[Title/Abstract] OR \"chemical\"[Title/Abstract] OR \"compound\"[Title/Abstract] OR \"pathway\"[Title/Abstract] OR \"receptor\"[Title/Abstract] OR \"resistance\"[Title/Abstract] OR \"sensitivity\"[Title/Abstract])\n",
+      "scopus_query": "TITLE-ABS-KEY(\"pancreatic cancer\" OR \"pancreatic neoplasm\" OR \"PDAC\" OR \"pancreatic ductal adenocarcinoma\" OR \"pancreatic carcinoma\") AND TITLE-ABS-KEY(\"drug interaction\" OR \"gene expression\" OR \"protein interaction\" OR \"biomarker\" OR \"therapeutic target\" OR \"mutation\" OR \"drug response\" OR \"signal transduction\" OR \"adverse effect\" OR \"pathway\" OR \"resistance\" OR \"receptor\" OR \"sensitivity\")\n",
+      "date_from": "2015/01/01",
+      "date_to": "2026/04/19",
+      "pubmed_retmax": 10000,
+      "scopus_max_results": 10000
+    },
+    "screening": {
+      "allowed_languages": [
+        "eng"
+      ],
+      "excluded_pub_types": [
+        "Review",
+        "Editorial",
+        "Letter",
+        "Comment",
+        "Erratum",
+        "Retracted Publication",
+        "Case Reports"
+      ],
+      "min_abstract_length": 200,
+      "max_abstract_length": 0
+    },
+    "deduplication": {
+      "minhash_threshold": 0.85,
+      "minhash_num_perm": 128,
+      "shingle_size": 3
+    },
+    "preprocessing": {
+      "tokenizer": "nltk",
+      "sentence_splitter": "nltk",
+      "normalize": {
+        "lowercase": true,
+        "strip_accents": true,
+        "normalize_unicode": true,
+        "normalize_whitespace": true,
+        "remove_urls": true,
+        "remove_emails": true
+      }
+    },
+    "eligibility": {
+      "min_entity_types": 1,
+      "entity_method": "dictionary",
+      "entity_keywords": {
+        "drug": [
+          "gemcitabine",
+          "erlotinib",
+          "nab-paclitaxel",
+          "fluorouracil",
+          "5-fu",
+          "folfirinox",
+          "irinotecan",
+          "oxaliplatin",
+          "capecitabine",
+          "olaparib",
+          "pembrolizumab",
+          "nivolumab",
+          "nanoliposomal",
+          "cisplatin",
+          "abraxane",
+          "everolimus",
+          "sunitinib",
+          "trametinib"
+        ],
+        "gene_protein": [
+          "KRAS",
+          "TP53",
+          "CDKN2A",
+          "SMAD4",
+          "BRCA1",
+          "BRCA2",
+          "EGFR",
+          "VEGF",
+          "HER2",
+          "mTOR",
+          "PI3K",
+          "AKT",
+          "PALB2",
+          "ATM",
+          "NTRK",
+          "PD-L1",
+          "PD-1",
+          "PARP",
+          "MUC1",
+          "CA19-9",
+          "CEA"
+        ],
+        "disease": [
+          "pancreatic cancer",
+          "pancreatic ductal adenocarcinoma",
+          "PDAC",
+          "pancreatic neoplasm",
+          "pancreatitis",
+          "metastatic",
+          "adenocarcinoma",
+          "carcinoma"
+        ],
+        "pathway": [
+          "Wnt",
+          "Hedgehog",
+          "Notch",
+          "NF-kB",
+          "MAPK",
+          "JAK-STAT",
+          "TGF-beta",
+          "apoptosis",
+          "autophagy",
+          "angiogenesis"
+        ]
+      }
+    }
+  }
+}

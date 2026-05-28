@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "PanCan-RE",
+  "description": "Relation type definitions for pancreatic cancer biomedical relation extraction. Based on BioRED relation taxonomy (Luo et al., 2022) with directionality from BioREDirect (Lai et al., 2025). Covers ALL biomedical relation types found in pancreatic cancer literature.",
+
+  "relation_types": {
+    "Positive_Correlation": {
+      "id": 0,
+      "directed": true,
+      "color": "#E53935",
+      "description": "Entity A positively affects, increases, induces, activates, upregulates, promotes, or causes entity B. The subject entity drives or enhances the object entity.",
+      "pancreatic_cancer_examples": [
+        {"subject": "KRASG12D", "subject_type": "VAR", "object": "pancreatic cancer", "object_type": "DIS", "sentence": "KRAS G12D mutation drives pancreatic cancer progression"},
+        {"subject": "gemcitabine", "subject_type": "CHEM", "object": "neuropathy", "object_type": "DIS", "sentence": "Gemcitabine treatment induced peripheral neuropathy (adverse effect)"},
+        {"subject": "KRAS", "subject_type": "GENE", "object": "MAPK pathway", "object_type": "PATH", "sentence": "Oncogenic KRAS activates the MAPK signaling pathway"},
+        {"subject": "Hedgehog pathway", "subject_type": "PATH", "object": "chemoresistance", "object_type": "DIS", "sentence": "Hedgehog pathway activation promotes chemoresistance in PDAC"},
+        {"subject": "c-Myc", "subject_type": "GENE", "object": "PANC-1", "object_type": "CELL", "sentence": "c-Myc overexpression increased proliferation in PANC-1 cells"}
+      ],
+      "valid_entity_pairs": "All combinations",
+      "frequency_in_corpus": "~63% of abstracts contain activation/upregulation/promotion signals"
+    },
+
+    "Negative_Correlation": {
+      "id": 1,
+      "directed": true,
+      "color": "#1E88E5",
+      "description": "Entity A negatively affects, decreases, inhibits, suppresses, downregulates, treats, or blocks entity B. The subject entity reduces or counteracts the object entity.",
+      "pancreatic_cancer_examples": [
+        {"subject": "gemcitabine", "subject_type": "CHEM", "object": "pancreatic cancer", "object_type": "DIS", "sentence": "Gemcitabine is used as first-line treatment for pancreatic cancer"},
+        {"subject": "olaparib", "subject_type": "CHEM", "object": "PARP", "object_type": "GENE", "sentence": "Olaparib inhibits PARP enzyme activity"},
+        {"subject": "erlotinib", "subject_type": "CHEM", "object": "EGFR", "object_type": "GENE", "sentence": "Erlotinib suppresses EGFR signaling"},
+        {"subject": "saikosaponin D", "subject_type": "CHEM", "object": "AKT/mTOR pathway", "object_type": "PATH", "sentence": "SSD overcomes gemcitabine resistance via AKT/mTOR pathway inhibition"},
+        {"subject": "SMAD4", "subject_type": "GENE", "object": "angiogenesis", "object_type": "PATH", "sentence": "SMAD4 suppresses angiogenesis in PDAC"}
+      ],
+      "valid_entity_pairs": "All combinations",
+      "frequency_in_corpus": "~54% of abstracts contain inhibition/suppression/treatment signals"
+    },
+
+    "Association": {
+      "id": 2,
+      "directed": false,
+      "color": "#FDD835",
+      "description": "General association between two entities where the specific directional mechanism is not stated or is ambiguous. Use when the text establishes a link but does not specify positive or negative correlation. Includes biomarker associations, prognostic associations, and general co-occurrence with stated relevance.",
+      "pancreatic_cancer_examples": [
+        {"subject": "CA19-9", "subject_type": "GENE", "object": "pancreatic cancer", "object_type": "DIS", "sentence": "CA19-9 is associated with pancreatic cancer prognosis"},
+        {"subject": "KRAS", "subject_type": "GENE", "object": "PDAC", "object_type": "DIS", "sentence": "KRAS mutations are found in ~94% of PDAC cases"},
+        {"subject": "PD-L1", "subject_type": "GENE", "object": "tumor microenvironment", "object_type": "DIS", "sentence": "PD-L1 expression was correlated with immune cell infiltration"},
+        {"subject": "gemcitabine", "subject_type": "CHEM", "object": "BRCA2 mutation", "object_type": "VAR", "sentence": "Response to gemcitabine was associated with BRCA2 mutation status"}
+      ],
+      "valid_entity_pairs": "All combinations",
+      "frequency_in_corpus": "~40% of abstracts contain association/correlation language"
+    },
+
+    "Binding": {
+      "id": 3,
+      "directed": false,
+      "color": "#8E24AA",
+      "description": "Physical molecular binding or direct interaction between two entities. Includes receptor-ligand binding, protein-protein physical interaction, drug-target binding, and complex formation.",
+      "pancreatic_cancer_examples": [
+        {"subject": "erlotinib", "subject_type": "CHEM", "object": "EGFR", "object_type": "GENE", "sentence": "Erlotinib binds to the EGFR tyrosine kinase domain"},
+        {"subject": "PD-1", "subject_type": "GENE", "object": "PD-L1", "object_type": "GENE", "sentence": "PD-1 binds to PD-L1 on tumor cells"},
+        {"subject": "olaparib", "subject_type": "CHEM", "object": "PARP", "object_type": "GENE", "sentence": "Olaparib directly binds the PARP catalytic site"}
+      ],
+      "valid_entity_pairs": ["GENE-GENE", "CHEM-GENE", "CHEM-PATH"],
+      "frequency_in_corpus": "~39% of abstracts contain binding/interaction language"
+    },
+
+    "Drug_Interaction": {
+      "id": 4,
+      "directed": false,
+      "color": "#FF6F00",
+      "description": "Pharmacological interaction between two drugs/chemicals when co-administered. The combined effect differs from individual effects. Includes synergistic, antagonistic, and additive drug interactions.",
+      "pancreatic_cancer_examples": [
+        {"subject": "olaparib", "subject_type": "CHEM", "object": "gemcitabine", "object_type": "CHEM", "sentence": "Olaparib has synergistic effects with gemcitabine in PDAC cells"},
+        {"subject": "evofosfamide", "subject_type": "CHEM", "object": "gemcitabine", "object_type": "CHEM", "sentence": "Evofosfamide and gemcitabine act synergistically in pancreatic cancer"}
+      ],
+      "valid_entity_pairs": ["CHEM-CHEM"],
+      "frequency_in_corpus": "~34% of abstracts mention drug sensitivity/synergy"
+    },
+
+    "Cotreatment": {
+      "id": 5,
+      "directed": false,
+      "color": "#00897B",
+      "description": "Two drugs/chemicals used together as a combined treatment regimen. Unlike Drug_Interaction (which describes pharmacological mechanism), Cotreatment describes clinical co-administration.",
+      "pancreatic_cancer_examples": [
+        {"subject": "gemcitabine", "subject_type": "CHEM", "object": "nab-paclitaxel", "object_type": "CHEM", "sentence": "Patients received gemcitabine and nab-paclitaxel as first-line treatment"},
+        {"subject": "ceralasertib", "subject_type": "CHEM", "object": "olaparib", "object_type": "CHEM", "sentence": "Sequential ATR (ceralasertib) and PARP (olaparib) inhibition overcomes resistance"}
+      ],
+      "valid_entity_pairs": ["CHEM-CHEM"],
+      "frequency_in_corpus": "~24% of abstracts describe treatment regimens"
+    },
+
+    "Comparison": {
+      "id": 6,
+      "directed": false,
+      "color": "#78909C",
+      "description": "Two entities (typically drugs or treatments) are explicitly compared in a study. The comparison may or may not determine superiority.",
+      "pancreatic_cancer_examples": [
+        {"subject": "FOLFIRINOX", "subject_type": "CHEM", "object": "gemcitabine", "object_type": "CHEM", "sentence": "FOLFIRINOX showed superior survival compared to gemcitabine alone"},
+        {"subject": "olaparib", "subject_type": "CHEM", "object": "placebo", "object_type": "CHEM", "sentence": "Olaparib maintenance versus placebo in BRCA-mutated PDAC"}
+      ],
+      "valid_entity_pairs": ["CHEM-CHEM", "GENE-GENE"],
+      "frequency_in_corpus": "Present in clinical trial abstracts"
+    },
+
+    "Conversion": {
+      "id": 7,
+      "directed": true,
+      "color": "#6D4C41",
+      "description": "One chemical/compound is metabolized or converted into another. Includes prodrug activation and metabolic transformations.",
+      "pancreatic_cancer_examples": [
+        {"subject": "5-FU", "subject_type": "CHEM", "object": "fluorouracil", "object_type": "CHEM", "sentence": "Capecitabine is an oral prodrug of 5-fluorouracil"},
+        {"subject": "evofosfamide", "subject_type": "CHEM", "object": "bromo-isophosphoramide mustard", "object_type": "CHEM", "sentence": "Evofosfamide is a hypoxia-activated prodrug"}
+      ],
+      "valid_entity_pairs": ["CHEM-CHEM"],
+      "frequency_in_corpus": "Rare; present in pharmacology-focused abstracts"
+    }
+  },
+
+  "novelty_labels": {
+    "Novel": {
+      "id": 0,
+      "description": "The relation describes a NEW finding, result, conclusion, or observation reported by the current study. The relation is part of what the authors discovered or demonstrated."
+    },
+    "Known": {
+      "id": 1,
+      "description": "The relation describes PREVIOUSLY PUBLISHED background knowledge cited or assumed by the authors. The relation is not a new finding of the current study."
+    }
+  },
+
+  "no_relation_handling": "Only annotate positive (existing) relations. Entity pairs that co-occur in the same sentence without an annotated relation are implicitly treated as 'No Relation' during model training.",
+
+  "total_relation_types": 8,
+  "total_novelty_labels": 2,
+
+  "design_rationale": "The relation schema directly follows BioRED (Luo et al., 2022) to ensure comparability with the established benchmark. All 8 BioRED relation types are retained: Positive_Correlation, Negative_Correlation, and Association cover ~96% of relations; Binding, Drug_Interaction, Cotreatment, Comparison, and Conversion cover specialized interactions. Directionality follows BioREDirect (Lai et al., 2025) — subject/object roles are annotated for directed relations. The Novel/Known distinction is adopted from BioRED to enable identification of new discoveries versus background knowledge. This schema was validated against 30 sampled PanCan-RE abstracts and the corpus-wide relation signal analysis showing all 8 types are represented in the data."
+}

@@ -1,0 +1,21 @@
+{
+  "pubmed_identified": 9999,
+  "pmc_identified": 9999,
+  "scopus_identified": 5000,
+  "total_identified": 24998,
+  "exact_duplicates_removed": 293,
+  "near_duplicates_removed": 4842,
+  "total_duplicates_removed": 5135,
+  "after_deduplication": 9860,
+  "excluded_language": 65,
+  "excluded_pub_type": 1753,
+  "excluded_no_abstract": 1,
+  "excluded_abstract_too_short": 23,
+  "excluded_abstract_too_long": 0,
+  "total_screening_excluded": 1842,
+  "after_screening": 8018,
+  "assessed_eligibility": 8018,
+  "excluded_no_entity_pairs": 269,
+  "after_eligibility": 7749,
+  "final_included": 7749
+}

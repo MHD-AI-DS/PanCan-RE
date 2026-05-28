@@ -1,0 +1,187 @@
+# ============================================================================
+# Pancreatic Cancer Biomedical Corpus — Configuration
+# ============================================================================
+# All tunable parameters in one place. Edit this file, not the code.
+
+project:
+  name: "PanCan-RE Corpus"
+  version: "1.0.0"
+  description: "PRISMA-compliant biomedical corpus for pancreatic cancer relation extraction"
+  author: "Mothanna Almahmoud Almousa"
+  institution: "Universidad de Alcala"
+  date_created: "2026-04-19"
+
+# --- API credentials --------------------------------------------------------
+api:
+  ncbi:
+    api_key: ""                          # Optional: get one at https://www.ncbi.nlm.nih.gov/account/settings/
+    email: "mothanna.almahmoud@edu.uah.es"
+    tool_name: "pancan_re_corpus"
+    rate_limit_per_sec: 3                # 3 without key, 10 with key
+  scopus:
+    api_key: ""                              # Set via SCOPUS_API_KEY env var or paste here (DO NOT commit to Git)
+    rate_limit_per_sec: 5
+
+# --- Search strategy --------------------------------------------------------
+search:
+  # PubMed Boolean query (MeSH + keywords)
+  pubmed_query: >
+    ("pancreatic neoplasms"[MeSH Terms] OR "pancreatic cancer"[Title/Abstract]
+    OR "pancreatic ductal adenocarcinoma"[Title/Abstract] OR "PDAC"[Title/Abstract]
+    OR "pancreatic tumor"[Title/Abstract] OR "pancreatic carcinoma"[Title/Abstract])
+    AND
+    ("drug interactions"[MeSH Terms] OR "drug-drug interaction"[Title/Abstract]
+    OR "gene expression"[MeSH Terms] OR "gene-disease"[Title/Abstract]
+    OR "protein interaction"[Title/Abstract] OR "protein-protein interaction"[Title/Abstract]
+    OR "signal transduction"[MeSH Terms] OR "drug response"[Title/Abstract]
+    OR "biomarker"[Title/Abstract] OR "therapeutic target"[Title/Abstract]
+    OR "mutation"[Title/Abstract] OR "polymorphism"[Title/Abstract]
+    OR "adverse effect"[Title/Abstract] OR "side effect"[Title/Abstract]
+    OR "chemical"[Title/Abstract] OR "compound"[Title/Abstract]
+    OR "pathway"[Title/Abstract] OR "receptor"[Title/Abstract]
+    OR "resistance"[Title/Abstract] OR "sensitivity"[Title/Abstract])
+
+  # Scopus Boolean query
+  scopus_query: >
+    TITLE-ABS-KEY("pancreatic cancer" OR "pancreatic neoplasm" OR "PDAC"
+    OR "pancreatic ductal adenocarcinoma" OR "pancreatic carcinoma")
+    AND TITLE-ABS-KEY("drug interaction" OR "gene expression" OR "protein interaction"
+    OR "biomarker" OR "therapeutic target" OR "mutation" OR "drug response"
+    OR "signal transduction" OR "adverse effect" OR "pathway" OR "resistance"
+    OR "receptor" OR "sensitivity")
+
+  # Date range
+  date_from: "2015/01/01"
+  date_to: "2026/04/19"
+
+  # PubMed: max results per query batch
+  pubmed_retmax: 10000
+
+  # Scopus: max results
+  scopus_max_results: 10000
+
+# --- Screening criteria -----------------------------------------------------
+screening:
+  # Language filter
+  allowed_languages:
+    - "eng"
+
+  # Document types to EXCLUDE
+  excluded_pub_types:
+    - "Review"
+    - "Editorial"
+    - "Letter"
+    - "Comment"
+    - "Erratum"
+    - "Retracted Publication"
+    - "Case Reports"
+
+  # Minimum abstract length (characters)
+  min_abstract_length: 200
+
+  # Maximum abstract length (characters) — 0 means no limit
+  max_abstract_length: 0
+
+# --- Deduplication -----------------------------------------------------------
+deduplication:
+  # Near-duplicate detection via MinHash
+  minhash_threshold: 0.85    # Jaccard similarity threshold
+  minhash_num_perm: 128      # Number of permutations
+  shingle_size: 3            # Word n-gram size for shingling
+
+# --- Preprocessing -----------------------------------------------------------
+preprocessing:
+  # Tokenizer: "scispacy" or "nltk"
+  tokenizer: "nltk"
+
+  # Sentence splitter: "scispacy" or "nltk"
+  sentence_splitter: "nltk"
+
+  # Normalization options
+  normalize:
+    lowercase: true
+    strip_accents: true
+    normalize_unicode: true
+    normalize_whitespace: true
+    remove_urls: true
+    remove_emails: true
+
+# --- Eligibility (entity-based filtering) -----------------------------------
+eligibility:
+  # Require at least this many biomedical entity types in the abstract
+  min_entity_types: 1
+
+  # Entity detection method: "dictionary" or "scispacy"
+  entity_method: "dictionary"
+
+  # Dictionary-based entity keywords (case-insensitive substrings)
+  entity_keywords:
+    drug:
+      - "gemcitabine"
+      - "erlotinib"
+      - "nab-paclitaxel"
+      - "fluorouracil"
+      - "5-fu"
+      - "folfirinox"
+      - "irinotecan"
+      - "oxaliplatin"
+      - "capecitabine"
+      - "olaparib"
+      - "pembrolizumab"
+      - "nivolumab"
+      - "nanoliposomal"
+      - "cisplatin"
+      - "abraxane"
+      - "everolimus"
+      - "sunitinib"
+      - "trametinib"
+    gene_protein:
+      - "KRAS"
+      - "TP53"
+      - "CDKN2A"
+      - "SMAD4"
+      - "BRCA1"
+      - "BRCA2"
+      - "EGFR"
+      - "VEGF"
+      - "HER2"
+      - "mTOR"
+      - "PI3K"
+      - "AKT"
+      - "PALB2"
+      - "ATM"
+      - "NTRK"
+      - "PD-L1"
+      - "PD-1"
+      - "PARP"
+      - "MUC1"
+      - "CA19-9"
+      - "CEA"
+    disease:
+      - "pancreatic cancer"
+      - "pancreatic ductal adenocarcinoma"
+      - "PDAC"
+      - "pancreatic neoplasm"
+      - "pancreatitis"
+      - "metastatic"
+      - "adenocarcinoma"
+      - "carcinoma"
+    pathway:
+      - "Wnt"
+      - "Hedgehog"
+      - "Notch"
+      - "NF-kB"
+      - "MAPK"
+      - "JAK-STAT"
+      - "TGF-beta"
+      - "apoptosis"
+      - "autophagy"
+      - "angiogenesis"
+
+# --- Output ------------------------------------------------------------------
+output:
+  data_dir: "data"
+  final_corpus: "data/final/corpus.jsonl"
+  prisma_diagram: "data/prisma/prisma_flow.png"
+  prisma_counts: "data/prisma/prisma_counts.json"
+  thesis_chapter: "docs/Chapter_Corpus_Construction.docx"

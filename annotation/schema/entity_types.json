@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "PanCan-RE",
+  "description": "Entity type definitions for pancreatic cancer biomedical relation extraction. Based on BioRED entity taxonomy (Luo et al., 2022) with domain-specific extension for Pathway entities.",
+
+  "entity_types": {
+    "GeneOrProtein": {
+      "id": 0,
+      "short": "GENE",
+      "description": "Gene or gene product (protein, enzyme, receptor, transcription factor). Includes named genes/proteins, gene families, and protein complexes.",
+      "color": "#4CAF50",
+      "examples": [
+        "KRAS", "TP53", "CDKN2A", "SMAD4", "BRCA1", "BRCA2",
+        "EGFR", "VEGF", "HER2", "mTOR", "PI3K", "AKT",
+        "PD-L1", "PD-1", "PARP", "c-Myc", "GPR120",
+        "FOXM1", "CDK4", "RAS", "NF-kB"
+      ],
+      "normalization_db": "NCBI Gene",
+      "notes": "Annotate the most specific form. 'KRAS protein' -> annotate 'KRAS' as GeneOrProtein. Include receptors (EGFR), enzymes (PARP), transcription factors (FOXM1)."
+    },
+
+    "Chemical": {
+      "id": 1,
+      "short": "CHEM",
+      "description": "Drug, pharmaceutical compound, chemical substance, or therapeutic agent. Includes approved drugs, experimental compounds, natural products, and drug regimen names.",
+      "color": "#2196F3",
+      "examples": [
+        "gemcitabine", "FOLFIRINOX", "olaparib", "erlotinib",
+        "nab-paclitaxel", "cisplatin", "oxaliplatin", "irinotecan",
+        "pembrolizumab", "nivolumab", "5-FU", "fluorouracil",
+        "saikosaponin D", "evofosfamide", "ceralasertib",
+        "doxorubicin", "losartan"
+      ],
+      "normalization_db": "MeSH / DrugBank",
+      "notes": "Multi-drug regimens (FOLFIRINOX) are annotated as a single Chemical entity. Generic and brand names both valid. Annotate the full drug name as it appears."
+    },
+
+    "Disease": {
+      "id": 2,
+      "short": "DIS",
+      "description": "Disease, disorder, pathological condition, or phenotypic manifestation. Includes cancer subtypes, symptoms, and clinical conditions.",
+      "color": "#F44336",
+      "examples": [
+        "pancreatic cancer", "pancreatic ductal adenocarcinoma", "PDAC",
+        "metastatic pancreatic cancer", "pancreatic neuroendocrine tumor",
+        "chemoresistance", "drug resistance", "neuropathy", "neutropenia",
+        "diabetes", "pancreatitis", "cachexia", "jaundice"
+      ],
+      "normalization_db": "MeSH / OMIM / DO",
+      "notes": "Annotate the most specific disease mention. 'metastatic PDAC' is one Disease entity. Adverse drug effects that are diseases (neuropathy, neutropenia) are annotated as Disease. 'drug resistance' and 'chemoresistance' are Disease/Phenotype."
+    },
+
+    "SequenceVariant": {
+      "id": 3,
+      "short": "VAR",
+      "description": "Genetic mutation, polymorphism, variant, or genomic alteration. Includes point mutations, deletions, amplifications, and epigenetic modifications.",
+      "color": "#9C27B0",
+      "examples": [
+        "KRASG12D", "KRASG12C", "KRASG12R", "KRASQ61H",
+        "BRCA2 mutation", "TP53 deletion", "CDKN2A loss",
+        "microsatellite instability-high", "MSI-H",
+        "loss of heterozygosity", "SMAD4 inactivation"
+      ],
+      "normalization_db": "dbSNP / ClinVar / tmVar format",
+      "notes": "Annotate the full variant description. 'KRASG12D mutation' -> annotate 'KRASG12D' as SequenceVariant and 'KRAS' (if mentioned separately) as GeneOrProtein. If only 'KRAS mutation' (no specific variant), annotate 'KRAS mutation' as SequenceVariant."
+    },
+
+    "Pathway": {
+      "id": 4,
+      "short": "PATH",
+      "description": "Biological pathway, signaling cascade, or cellular process. This entity type extends the BioRED schema to capture the frequent pathway references in pancreatic cancer literature.",
+      "color": "#FF9800",
+      "examples": [
+        "MAPK pathway", "PI3K/AKT/mTOR pathway", "Wnt signaling",
+        "Hedgehog pathway", "Notch signaling", "NF-kB pathway",
+        "JAK-STAT pathway", "TGF-beta signaling",
+        "apoptosis", "autophagy", "ferroptosis", "angiogenesis",
+        "epithelial-mesenchymal transition", "EMT",
+        "DNA damage response", "homologous recombination"
+      ],
+      "normalization_db": "KEGG / Reactome / GO Biological Process",
+      "notes": "Annotate named pathways and well-defined cellular processes. 'apoptosis pathway' -> annotate 'apoptosis' as Pathway. Generic terms like 'cell death' are NOT pathways unless referring to a specific mechanism. EMT is annotated as Pathway."
+    },
+
+    "CellLine": {
+      "id": 5,
+      "short": "CELL",
+      "description": "Established cell line or primary cell culture used in experimental studies.",
+      "color": "#607D8B",
+      "examples": [
+        "PANC-1", "MIA PaCa-2", "AsPC-1", "BxPC-3",
+        "Suit-2", "Capan-1", "SU.86.86", "SW1990",
+        "CFPAC-1", "HPAC"
+      ],
+      "normalization_db": "Cellosaurus",
+      "notes": "Only annotate established cell line names, not generic cell type descriptions ('pancreatic cancer cells' is NOT a CellLine; 'PANC-1 cells' -> annotate 'PANC-1' as CellLine)."
+    }
+  },
+
+  "total_entity_types": 6,
+
+  "design_rationale": "The entity schema follows BioRED (Luo et al., 2022) with one key extension: Pathway. BioRED does not include Pathway as an entity type, but 43.5% of PanCan-RE abstracts contain pathway references (MAPK, Wnt, apoptosis, etc.), making this essential for pancreatic cancer RE. The Organism entity type from BioRED is excluded as all records are about human pancreatic cancer. CellLine is retained because experimental cell lines are frequently mentioned in pancreatic cancer research and participate in relations (e.g., 'gemcitabine resistance in PANC-1 cells')."
+}

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PanCan-RE Expert Review</title>
+    <style>
+        :root {
+            --primary: #1B2A4A;
+            --accent: #2196F3;
+            --success: #4CAF50;
+            --danger: #F44336;
+            --warning: #FF9800;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header h1 { font-size: 1.4rem; font-weight: 600; }
+        .header .badge {
+            background: rgba(255,255,255,0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar {
+            background: var(--primary);
+            padding: 0 30px 15px;
+        }
+        .progress-track {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: var(--success);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .abstract-text {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: #444;
+        }
+
+        /* Entity highlights */
+        .ent-GENE { background: #4CAF5022; border: 1px solid #4CAF50; border-radius: 3px; padding: 1px 4px; }
+        .ent-CHEM { background: #2196F322; border: 1px solid #2196F3; border-radius: 3px; padding: 1px 4px; }
+        .ent-DIS { background: #F4433622; border: 1px solid #F44336; border-radius: 3px; padding: 1px 4px; }
+        .ent-VAR { background: #9C27B022; border: 1px solid #9C27B0; border-radius: 3px; padding: 1px 4px; }
+        .ent-PATH { background: #FF980022; border: 1px solid #FF9800; border-radius: 3px; padding: 1px 4px; }
+        .ent-CELL { background: #607D8B22; border: 1px solid #607D8B; border-radius: 3px; padding: 1px 4px; }
+
+        .ent-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .legend-item {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        .relation-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        .relation-card.verdict-Correct { border-color: var(--success); background: #E8F5E9; }
+        .relation-card.verdict-Incorrect { border-color: var(--danger); background: #FFEBEE; }
+        .relation-card.verdict-Unsure { border-color: var(--warning); background: #FFF3E0; }
+
+        .relation-text {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .relation-arrow { color: var(--accent); font-weight: bold; margin: 0 8px; }
+        .relation-type {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        .novelty-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .novelty-Novel { background: #E3F2FD; color: #1565C0; }
+        .novelty-Known { background: #F3E5F5; color: #7B1FA2; }
+
+        .evidence {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+            margin: 6px 0;
+            padding-left: 12px;
+            border-left: 3px solid var(--border);
+        }
+
+        .verdict-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .verdict-btn {
+            padding: 6px 16px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .verdict-btn:hover { transform: translateY(-1px); }
+        .verdict-btn.selected-Correct { border-color: var(--success); background: #E8F5E9; color: var(--success); }
+        .verdict-btn.selected-Incorrect { border-color: var(--danger); background: #FFEBEE; color: var(--danger); }
+        .verdict-btn.selected-Unsure { border-color: var(--warning); background: #FFF3E0; color: var(--warning); }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            resize: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .nav-btn.primary { background: var(--accent); color: white; }
+        .nav-btn.secondary { background: white; color: var(--text); border: 1px solid var(--border); }
+        .nav-btn.success { background: var(--success); color: white; }
+
+        .record-counter { font-size: 0.9rem; color: #888; }
+
+        .instructions {
+            background: #E3F2FD;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .instructions h3 { margin-bottom: 8px; color: var(--primary); }
+
+        .download-section { text-align: center; padding: 40px; }
+
+        #reviewer-setup { text-align: center; padding: 60px 20px; }
+        #reviewer-setup input {
+            padding: 10px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 300px;
+            margin: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .card { padding: 16px; }
+            .verdict-buttons { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PanCan-RE Expert Review</h1>
+        <span class="badge" id="reviewer-badge">Reviewer: —</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-text" id="progress-text">0 / 0 reviewed</div>
+    </div>
+
+    <!-- Reviewer setup -->
+    <div id="reviewer-setup" class="container">
+        <div class="card">
+            <h2>Welcome, Expert Reviewer</h2>
+            <p style="margin: 16px 0; color: #666;">
+                Thank you for validating these biomedical relation annotations.<br>
+                Your expert review is essential for publishing this dataset.
+            </p>
+            <input type="text" id="reviewer-name" placeholder="Your name (e.g., Dr. Smith)">
+            <br>
+            <button class="nav-btn primary" onclick="startReview()" style="margin-top: 16px;">Begin Review</button>
+        </div>
+    </div>
+
+    <!-- Main review area -->
+    <div id="review-area" class="container" style="display:none;">
+        <div class="instructions">
+            <h3>How to Review</h3>
+            For each proposed relation, click <strong>Correct</strong>, <strong>Incorrect</strong>, or <strong>Unsure</strong>.
+            Optionally add a comment. Click <strong>Next</strong> when done with this abstract.
+        </div>
+
+        <!-- Record card -->
+        <div class="card">
+            <div class="card-title">ABSTRACT <span id="record-id"></span></div>
+            <div style="font-weight: 600; margin-bottom: 10px;" id="record-title"></div>
+            <div class="legend">
+                <span class="legend-item ent-GENE">Gene/Protein</span>
+                <span class="legend-item ent-CHEM">Drug/Chemical</span>
+                <span class="legend-item ent-DIS">Disease</span>
+                <span class="legend-item ent-VAR">Mutation</span>
+                <span class="legend-item ent-PATH">Pathway</span>
+                <span class="legend-item ent-CELL">Cell Line</span>
+            </div>
+            <div class="abstract-text" id="abstract-html"></div>
+        </div>
+
+        <!-- Relations -->
+        <div class="card">
+            <div class="card-title">PROPOSED RELATIONS</div>
+            <div id="relations-container"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="nav-btn secondary" onclick="prevRecord()">← Previous</button>
+            <span class="record-counter" id="record-counter"></span>
+            <button class="nav-btn primary" onclick="nextRecord()">Next →</button>
+        </div>
+
+        <!-- Download -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="nav-btn success" onclick="downloadResults()">Download Review Results</button>
+        </div>
+    </div>
+
+    <script>
+    // --- Data (will be populated by the export script) ---
+    let DATA = [];
+    let currentIdx = 0;
+    let reviewerName = "";
+    let verdicts = {}; // { "recordId_relId": { verdict, comment } }
+
+    const ENTITY_SHORT = {
+        "GeneOrProtein": "GENE", "Chemical": "CHEM", "Disease": "DIS",
+        "SequenceVariant": "VAR", "Pathway": "PATH", "CellLine": "CELL"
+    };
+    const ENTITY_CSS = {
+        "GeneOrProtein": "ent-GENE", "Chemical": "ent-CHEM", "Disease": "ent-DIS",
+        "SequenceVariant": "ent-VAR", "Pathway": "ent-PATH", "CellLine": "ent-CELL"
+    };
+    const REL_PLAIN = {
+        "Positive_Correlation": "increases / activates / causes",
+        "Negative_Correlation": "decreases / inhibits / treats",
+        "Association": "is associated with",
+        "Binding": "physically binds to",
+        "Drug_Interaction": "interacts with (pharmacologically)",
+        "Cotreatment": "is co-administered with",
+        "Comparison": "is compared with",
+        "Conversion": "is converted to"
+    };
+
+    // Load data from embedded JSON or external file
+    async function loadData() {
+        try {
+            const resp = await fetch("review_data.json");
+            DATA = await resp.json();
+        } catch (e) {
+            console.log("No external data file. Using embedded data.");
+        }
+    }
+
+    function startReview() {
+        reviewerName = document.getElementById("reviewer-name").value.trim() || "Anonymous";
+        document.getElementById("reviewer-badge").textContent = `Reviewer: ${reviewerName}`;
+        document.getElementById("reviewer-setup").style.display = "none";
+        document.getElementById("review-area").style.display = "block";
+        renderRecord();
+    }
+
+    function renderRecord() {
+        if (!DATA.length) return;
+        const rec = DATA[currentIdx];
+
+        document.getElementById("record-id").textContent = rec.record_id;
+        document.getElementById("record-title").textContent = rec.title;
+        document.getElementById("record-counter").textContent =
+            `${currentIdx + 1} of ${DATA.length}`;
+
+        // Render abstract with entity highlights
+        document.getElementById("abstract-html").innerHTML = highlightEntities(rec.abstract, rec.entities);
+
+        // Render relations
+        const container = document.getElementById("relations-container");
+        container.innerHTML = "";
+
+        const entLookup = {};
+        (rec.entities || []).forEach(e => entLookup[e.entity_id] = e);
+
+        (rec.relations || []).forEach((rel, i) => {
+            const subj = entLookup[rel.subject_id] || {};
+            const obj = entLookup[rel.object_id] || {};
+            const key = `${rec.record_id}_${rel.relation_id}`;
+            const saved = verdicts[key] || {};
+
+            const card = document.createElement("div");
+            card.className = `relation-card ${saved.verdict ? 'verdict-' + saved.verdict : ''}`;
+            card.id = `rel-card-${i}`;
+
+            const subjType = ENTITY_SHORT[subj.type] || "?";
+            const objType = ENTITY_SHORT[obj.type] || "?";
+            const relPlain = REL_PLAIN[rel.type] || rel.type;
+
+            card.innerHTML = `
+                <div class="relation-text">
+                    <strong>${subj.text || "?"}</strong>
+                    <span style="color:#888;">[${subjType}]</span>
+                    <span class="relation-arrow">→</span>
+                    <em>${relPlain}</em>
+                    <span class="relation-arrow">→</span>
+                    <strong>${obj.text || "?"}</strong>
+                    <span style="color:#888;">[${objType}]</span>
+                    <span class="relation-type">${rel.type.replace(/_/g, " ")}</span>
+                    <span class="novelty-tag novelty-${rel.novelty}">${rel.novelty}</span>
+                </div>
+                ${rel.evidence ? `<div class="evidence">"${truncate(rel.evidence, 200)}"</div>` : ''}
+                <div class="verdict-buttons">
+                    <button class="verdict-btn ${saved.verdict === 'Correct' ? 'selected-Correct' : ''}"
+                        onclick="setVerdict('${key}', 'Correct', ${i})">✓ Correct</button>
+                    <button class="verdict-btn ${saved.verdict === 'Incorrect' ? 'selected-Incorrect' : ''}"
+                        onclick="setVerdict('${key}', 'Incorrect', ${i})">✗ Incorrect</button>
+                    <button class="verdict-btn ${saved.verdict === 'Unsure' ? 'selected-Unsure' : ''}"
+                        onclick="setVerdict('${key}', 'Unsure', ${i})">? Unsure</button>
+                </div>
+                <textarea class="comment-input" rows="1" placeholder="Optional comment..."
+                    onchange="setComment('${key}', this.value)">${saved.comment || ''}</textarea>
+            `;
+            container.appendChild(card);
+        });
+
+        updateProgress();
+    }
+
+    function highlightEntities(text, entities) {
+        if (!entities || !entities.length) return text;
+
+        const sorted = entities
+            .filter(e => e.start >= 0 && e.end > 0)
+            .sort((a, b) => a.start - b.start);
+
+        let html = "";
+        let lastEnd = 0;
+        for (const ent of sorted) {
+            if (ent.start < lastEnd) continue;
+            const css = ENTITY_CSS[ent.type] || "";
+            const short = ENTITY_SHORT[ent.type] || "?";
+            html += escapeHtml(text.slice(lastEnd, ent.start));
+            html += `<span class="${css}" title="${ent.type} (${ent.entity_id})">${escapeHtml(text.slice(ent.start, ent.end))}<span class="ent-label" style="color:inherit;">${short}</span></span>`;
+            lastEnd = ent.end;
+        }
+        html += escapeHtml(text.slice(lastEnd));
+        return html;
+    }
+
+    function escapeHtml(s) {
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function truncate(s, n) {
+        return s.length > n ? s.slice(0, n) + "..." : s;
+    }
+
+    function setVerdict(key, verdict, relIdx) {
+        if (!verdicts[key]) verdicts[key] = {};
+        verdicts[key].verdict = verdict;
+        verdicts[key].reviewer = reviewerName;
+        verdicts[key].timestamp = new Date().toISOString();
+
+        // Update UI
+        const card = document.getElementById(`rel-card-${relIdx}`);
+        card.className = `relation-card verdict-${verdict}`;
+        card.querySelectorAll('.verdict-btn').forEach(btn => {
+            btn.className = 'verdict-btn';
+        });
+        const activeBtn = card.querySelector(`.verdict-btn:nth-child(${verdict === 'Correct' ? 1 : verdict === 'Incorrect' ? 2 : 3})`);
+        if (activeBtn) activeBtn.className = `verdict-btn selected-${verdict}`;
+
+        updateProgress();
+        // Save to localStorage
+        localStorage.setItem('pancan_verdicts', JSON.stringify(verdicts));
+    }
+
+    function setComment(key, comment) {
+        if (!verdicts[key]) verdicts[key] = {};
+        verdicts[key].comment = comment;
+        localStorage.setItem('pancan_verdicts', JSON.stringify(verdicts));
+    }
+
+    function updateProgress() {
+        const totalRels = DATA.reduce((sum, r) => sum + (r.relations || []).length, 0);
+        const reviewed = Object.keys(verdicts).filter(k => verdicts[k].verdict).length;
+        const pct = totalRels > 0 ? (reviewed / totalRels * 100) : 0;
+
+        document.getElementById("progress-fill").style.width = `${pct}%`;
+        document.getElementById("progress-text").textContent =
+            `${reviewed} / ${totalRels} relations reviewed (${pct.toFixed(0)}%)`;
+    }
+
+    function prevRecord() {
+        if (currentIdx > 0) { currentIdx--; renderRecord(); window.scrollTo(0, 0); }
+    }
+
+    function nextRecord() {
+        if (currentIdx < DATA.length - 1) { currentIdx++; renderRecord(); window.scrollTo(0, 0); }
+    }
+
+    function downloadResults() {
+        const results = {
+            reviewer: reviewerName,
+            review_date: new Date().toISOString(),
+            total_records: DATA.length,
+            total_relations_reviewed: Object.keys(verdicts).filter(k => verdicts[k].verdict).length,
+            verdicts: verdicts
+        };
+
+        const blob = new Blob([JSON.stringify(results, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `pancan_review_${reviewerName.replace(/\s/g, '_')}_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Initialize
+    window.addEventListener("load", async () => {
+        await loadData();
+
+        // Restore saved progress
+        const saved = localStorage.getItem('pancan_verdicts');
+        if (saved) {
+            try { verdicts = JSON.parse(saved); } catch(e) {}
+        }
+
+        if (DATA.length > 0) {
+            document.getElementById("reviewer-setup").querySelector("p").innerHTML +=
+                `<br><strong>${DATA.length} abstracts</strong> with <strong>${DATA.reduce((s,r) => s + (r.relations||[]).length, 0)} relations</strong> to review.`;
+        }
+    });
+    </script>
+</body>
+</html>
