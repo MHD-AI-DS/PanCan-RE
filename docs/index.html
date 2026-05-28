@@ -126,7 +126,9 @@
             <div class="stb"><div class="stn" id="sr">—</div><div class="stl">Relations</div></div>
             <div class="stb"><div class="stn" id="se">—</div><div class="stl">Entities</div></div>
         </div>
-        <input class="inf" id="rn" type="text" placeholder="Enter your name (e.g., Dr. Smith)"><br>
+        <input class="inf" id="rn" type="text" placeholder="Full name (e.g., Dr. Smith)" required><br>
+        <input class="inf" id="re" type="email" placeholder="Email address (required)" required style="margin-top:8px"><br>
+        <div id="form-error" style="color:var(--r5);font-size:.82rem;margin-top:6px;display:none"></div>
         <button class="nb pr" style="margin-top:16px;padding:14px 48px;font-size:1rem" onclick="start()">Start New Review →</button>
         <div class="resume-section">
             <h3>Returning reviewer?</h3>
@@ -185,7 +187,7 @@
 <div class="kbd-hint" id="kbd-hint" style="display:none"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp; <kbd>1</kbd> correct &nbsp; <kbd>2</kbd> incorrect &nbsp; <kbd>3</kbd> unsure</div>
 
 <script>
-let D=[],ci=0,rv="",V={};
+let D=[],ci=0,rv="",rEmail="",V={};
 const SH={GeneOrProtein:"GENE",Chemical:"CHEM",Disease:"DIS",SequenceVariant:"VAR",Pathway:"PATH",CellLine:"CELL"};
 const EC={GeneOrProtein:"eG",Chemical:"eC",Disease:"eD",SequenceVariant:"eV",Pathway:"eP",CellLine:"eL"};
 const RTC={Positive_Correlation:"PC",Negative_Correlation:"NC",Association:"AS",Binding:"BI",Drug_Interaction:"DI",Cotreatment:"CT",Comparison:"CM",Conversion:"CV"};
@@ -197,7 +199,14 @@ document.getElementById("sa").textContent=D.length;
 document.getElementById("sr").textContent=D.reduce((s,r)=>s+(r.relations||[]).length,0);
 document.getElementById("se").textContent=D.reduce((s,r)=>s+(r.entities||[]).length,0)}
 
-function start(){rv=document.getElementById("rn").value.trim()||"Anonymous";
+function start(){
+rv=document.getElementById("rn").value.trim();
+const em=document.getElementById("re").value.trim();
+const err=document.getElementById("form-error");
+if(!rv){err.textContent="Please enter your name.";err.style.display="block";return}
+if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent="Please enter a valid email address.";err.style.display="block";return}
+err.style.display="none";
+rEmail=em;
 document.getElementById("rb").textContent="Reviewer: "+rv;
 document.getElementById("ob").style.display="none";
 document.getElementById("ra").style.display="block";
@@ -243,7 +252,7 @@ h+=esc(t.slice(le));return h}
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 function trn(s,n){return s.length>n?s.slice(0,n)+"…":s}
 
-function vt(k,v,i){if(!V[k])V[k]={};V[k].verdict=v;V[k].reviewer=rv;V[k].ts=new Date().toISOString();
+function vt(k,v,i){if(!V[k])V[k]={};V[k].verdict=v;V[k].reviewer=rv;V[k].email=rEmail;V[k].ts=new Date().toISOString();
 localStorage.setItem("pcr_v",JSON.stringify(V));
 const el=document.getElementById("r"+i);el.className="rel ai v"+v[0];
 el.querySelectorAll(".vb").forEach(b=>b.className="vb");
@@ -265,7 +274,7 @@ document.getElementById("pl").textContent=dn+" / "+tot+" relations reviewed ("+M
 
 function go(d){ci=Math.max(0,Math.min(D.length-1,ci+d));render();window.scrollTo({top:0,behavior:"smooth"})}
 
-function dl(){const res={reviewer:rv,date:new Date().toISOString(),records:D.length,
+function dl(){const res={reviewer:rv,email:rEmail,date:new Date().toISOString(),records:D.length,
 relations_reviewed:Object.keys(V).filter(k=>V[k].verdict).length,verdicts:V,
 current_page:ci,version:"1.0"};
 const b=new Blob([JSON.stringify(res,null,2)],{type:"application/json"});
@@ -281,11 +290,12 @@ reader.onload=function(e){try{
 const data=JSON.parse(e.target.result);
 if(data.verdicts){V=data.verdicts;localStorage.setItem("pcr_v",JSON.stringify(V))}
 if(data.reviewer){document.getElementById("rn").value=data.reviewer}
+if(data.email){document.getElementById("re").value=data.email}
 if(typeof data.current_page==="number"){ci=data.current_page}
 const cnt=Object.keys(V).filter(k=>V[k].verdict).length;
 showToast("✓","Restored "+cnt+" verdicts from "+data.reviewer+"'s review");
 setTimeout(()=>{
-if(data.reviewer){document.getElementById("rn").value=data.reviewer;start()}
+if(data.reviewer&&data.email){document.getElementById("rn").value=data.reviewer;document.getElementById("re").value=data.email;start()}
 },500);
 }catch(err){showToast("✗","Invalid file format")}};
 reader.readAsText(file)}
